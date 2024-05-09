@@ -64,7 +64,7 @@ def show_label(image, label, task='detect'):
                     annotator.draw_mask(points, txt, color=colors(cls, True))
 
             cv2.imshow('show_label', annotator.img)
-            key = cv2.waitKey(500) if play else cv2.waitKey(0)
+            key = cv2.waitKey(50) if play else cv2.waitKey(0)
             if key == 32:
                 play = not play
             if key == 27:
@@ -79,10 +79,10 @@ def parse_opt():
     parser = argparse.ArgumentParser()
     parser.add_argument('--image', type=str,
                         help='image data dir',
-                        default='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/data3-SR-AI-2024-0220-train.txt')
+                        default='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/data5-soccernet-train.txt')
     parser.add_argument('--label', type=str,
                         help='label data dir',
-                        default='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/soccernet/train/SNMOT-060/labels_raw')
+                        default='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/soccernet/train/SNMOT-061/labels_0508')
     parser.add_argument('--task', choices=['detect', 'seg', 'pose'],
                         help='select task i.e. detect, seg, pose',
                         default='detect')
