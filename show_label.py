@@ -78,7 +78,7 @@ def show_label(image, label, task='detect'):
 def parse_opt():
     parser = argparse.ArgumentParser()
     parser.add_argument('--image', type=str,
-                        help='image data dir',
+                        help='image data dir or yolo format txt',
                         default='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/data5-soccernet-train.txt')
     parser.add_argument('--label', type=str,
                         help='label data dir',

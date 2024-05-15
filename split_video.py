@@ -107,19 +107,19 @@ class SplitVideo:
 
 
 if __name__ == '__main__':
-    h1, m1, s1 = 0, 0, 0    # 起始时间
+    h1, m1, s1 = 0, 24, 25    # 起始时间
     h2, m2, s2 = 0, 0, 0    # 结束时间
     app = SplitVideo(
-        video_path='/home/sfy/SFY/NAS/Datasets/football/思锐AI/温州移动-2/温州移动-2_0750-0848_2024-0201_dd24f7faa84e.mp4',
-        save_dir='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/SR-AI/2024-0424/raw/images',
+        video_path='/home/sfy/SFY/NAS/Datasets/football/raw_data/videos/斑马邦/X511023510010/20240427-161731/20240427-161731.mp4',
+        save_dir='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/bmb/2024-0511/raw/images',
         start=h1*3600 + m1*60 + s1,
         end=h2*3600 + m2*60 + s2,
         step=1,
-        max_n=-1,
-        datatype='SR'
+        max_n=500,
+        datatype=''
     )
 
     # app.auto_split()
     app.manual_split(
-        model='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/model/20240423-yolov8s-p2/weights/best.pt',
+        model='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/model/20240510-yolov8s-p2/weights/best.pt',
     )

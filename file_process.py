@@ -61,16 +61,16 @@ def rename_dirs(src, dst, root):
 if __name__ == '__main__':
     # 1. 移动验证数据
     random_copy_file(
-        src='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/SR-AI/2024-0424/raw/images',
-        dst='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/SR-AI/2024-0424/raw/val_raw',
+        src='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/bmb/2024-0511/raw/images',
+        dst='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/bmb/2024-0511/raw/val_raw',
         num=0.3,
         mode='move'
     )
 
     # 2. 移动剩余数据到训练集文件夹
     random_copy_file(
-        src='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/SR-AI/2024-0424/raw/images',
-        dst='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/SR-AI/2024-0424/raw/train_raw',
+        src='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/bmb/2024-0511/raw/images',
+        dst='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/bmb/2024-0511/raw/train_raw',
         num=-1,
         mode='move'
     )
