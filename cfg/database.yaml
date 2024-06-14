@@ -6,7 +6,10 @@ database:
 - /media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/SR-AI/2024-0220/raw/val
 - /media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/SR-AI/2024-0424/raw/train_raw
 - /media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/SR-AI/2024-0424/raw/val_raw
-- /media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/SR-AI/2024-0424/raw/images
-- /media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/bmb/2024-0511/raw/train_raw
-- /media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/bmb/2024-0511/raw/val_raw
-- /media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/bmb/2024-0511/raw/images
+- /media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/bmb/2024-0511/raw/train_images_raw
+- /media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/bmb/2024-0511/raw/val_images_raw
+- /media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/bmb/2024-0530/raw/train_images_raw
+- /media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/bmb/2024-0530/raw/val_images_raw
+- /media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/sp/2024-0605/raw/images
+- /media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/sp/2024-0605/raw/train_images_raw
+- /media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/sp/2024-0605/raw/val_images_raw
