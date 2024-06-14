@@ -79,10 +79,10 @@ def parse_opt():
     parser = argparse.ArgumentParser()
     parser.add_argument('--image', type=str,
                         help='image data dir or yolo format txt',
-                        default='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/data5-soccernet-train.txt')
+                        default='/media/sfy/47f2d7a5-17b0-403c-94bc-4e594dc510ca/SFY/data/football_det_data/data8-BMB-2024-0530-val.txt')
     parser.add_argument('--label', type=str,
                         help='label data dir',
-                        default='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/soccernet/train/SNMOT-061/labels_0508')
+                        default='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/bmb/2024-0530/labels/train_crop_202406071527')
     parser.add_argument('--task', choices=['detect', 'seg', 'pose'],
                         help='select task i.e. detect, seg, pose',
                         default='detect')

@@ -1,6 +1,6 @@
 import os.path
 import random
-
+from tqdm import tqdm
 import cv2
 import numpy as np
 
@@ -17,7 +17,7 @@ class CropData:
         self.w, self.h = crop_shape
 
     def run(self, img_save_dir=None, txt_save_dir=None):
-        for img_path in self.img_list:
+        for img_path in tqdm(self.img_list):
             txt_path = img2txt(img_path)
             if not os.path.exists(txt_path):
                 warnings.warn(f'{img_path} has no label', UserWarning)
@@ -45,17 +45,17 @@ class CropData:
 
                     crop_label = label - [0, x1_crop, y1_crop, x1_crop, y1_crop]
                     filter_label = crop_label[
-                        crop_label[:, 1] > 0 &
-                        crop_label[:, 2] > 0 &
-                        crop_label[:, 3] < self.w &
-                        crop_label[:, 4] < self.h
+                        (crop_label[:, 1] > 0) &
+                        (crop_label[:, 2] > 0) &
+                        (crop_label[:, 3] < self.w) &
+                        (crop_label[:, 4] < self.h)
                     ]
-                    filter_label[:, 1:] = ops.xyxy2xywh(filter_label[:, 1:])
+                    filter_label[:, 1:] = ops.xyxy2xywhn(filter_label[:, 1:], self.w, self.h)
                     txt_save_path = os.path.join(txt_save_dir, f'{fn}_{idx:0>2d}.txt')
                     np.savetxt(txt_save_path, filter_label, fmt='%d %.6f %.6f %.6f %.6f', delimiter=' ')
 
     def crop_obj(self, obj, wi, hi, eps=50):
-        x1, y1, x2, y2 = obj
+        x1, y1, x2, y2 = obj.astype(np.int32)
 
         x1_ = max(x1 - eps, 0)
         y1_ = max(y1 - eps, 0)
@@ -69,14 +69,17 @@ class CropData:
         r = x1_ - max(x2_ + w_ - wi, 0)
         t = max(y1_ - h_, 0)
         b = y1_ - max(y2_ + h_ - hi, 0)
-
+        # print(l, r, t, b)
         return random.randint(l, r), random.randint(t, b)
 
 
 if __name__ == '__main__':
-    data_path = ''
+    data_path = '/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/sp/2024-0605/raw/train_images_raw'
     app = CropData(
         img_list=find_files_with_ext(data_path, IMG_FORMATS),
         crop_shape=(960, 960)
     )
-    app.run()
+    app.run(
+        img_save_dir='/media/sfy/47f2d7a5-17b0-403c-94bc-4e594dc510ca/SFY/data/football_det_data/SP/2024-0605/images/train',
+        txt_save_dir='/media/sfy/47f2d7a5-17b0-403c-94bc-4e594dc510ca/SFY/data/football_det_data/SP/2024-0605/labels/train'
+    )

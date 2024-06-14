@@ -17,7 +17,7 @@ def cvat_xml2yolo_txt(image_dir, label_file, save_dir_name, task):
     for image in tqdm(images):
         attrib = image.attrib
         h, w = float(attrib['height']), float(attrib['width'])
-        img_id = int(attrib['id'])
+
         """
         <id>227</id>
           <start>3000</start>
@@ -26,8 +26,10 @@ def cvat_xml2yolo_txt(image_dir, label_file, save_dir_name, task):
           <start>27000</start>
           <stop>27749</stop>
         """
-        if 3749 < img_id < 27000:
-            continue
+        # TODO: soccernet id 过滤
+        # img_id = int(attrib['id'])
+        # if 3749 < img_id < 27000:
+        #     continue
 
         fn = os.path.split(attrib['name'])[-1]
 
@@ -36,7 +38,6 @@ def cvat_xml2yolo_txt(image_dir, label_file, save_dir_name, task):
             if img_file.endswith(attrib['name']):
                 img_root = os.path.dirname(os.path.split(img_file)[0])
 
-        # print(img_root)
         if img_root is not None:
             save_path = os.path.join(img_root, save_dir_name)
             os.makedirs(save_path, exist_ok=True)
@@ -62,7 +63,8 @@ def cvat_xml2yolo_txt(image_dir, label_file, save_dir_name, task):
                 boxes = image.findall('box')
                 for box in boxes:
                     cls = box.attrib['label']
-                    if cls == 'ball':
+                    # TODO: 过滤某些标签
+                    if cls == 'similar':
                         find_ball = True
                     if cls in LABELS.keys():
                         xl, yl, xr, yr = map(
@@ -76,7 +78,7 @@ def cvat_xml2yolo_txt(image_dir, label_file, save_dir_name, task):
             else:
                 raise ValueError(f'Unsupported task: {task}')
 
-            if txt and find_ball:
+            if txt:
                 with open(save_file, mode='w') as fp:
                     fp.writelines(txt)
 
@@ -85,16 +87,16 @@ if __name__ == '__main__':
     # TODO: 定义xml中标签名对应的类别id
     LABELS = {
         'ball': 0,
-        'shadow': 1,
-        'cover': 1,
-        'similar': 1
+        'shadow': 0,
+        'cover': 0,
+        'similar': 0
     }
-    image_dir = '/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/soccernet/train'
-    label_dir = '/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/soccernet/annotations'
+    image_dir = '/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/sp/2024-0605/raw/train_images_raw'
+    label_dir = '/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/sp/2024-0605/raw/annotation/train'
     for lf in find_files_with_ext(label_dir, 'xml'):
         cvat_xml2yolo_txt(
             image_dir=image_dir,
             label_file=lf,
-            save_dir_name='labels_0508',
+            save_dir_name='val_labels_raw',
             task='det'
         )

@@ -22,7 +22,7 @@ class SplitVideo:
 
         self.save_range = True if self.start < self.end else False
         self.save_num = True if self.max_n > 0 else False
-        self.save_n = 0
+        self.save_n = len(os.listdir(self.save_dir))
 
     def img_fn(self):
         # TODO: 注意修改文件名
@@ -83,7 +83,7 @@ class SplitVideo:
                 break
 
             if model is not None:
-                results = model.predict(frame, imgsz=max(self.video.h, self.video.w), conf=conf)
+                results = model.predict(frame, imgsz=max(self.video.h, self.video.w), conf=conf, classes=[0])
                 res = results[0].plot(labels=show_label)
                 cv2.imshow('split video', res)
             else:
@@ -101,25 +101,26 @@ class SplitVideo:
                 if self.save_frame(fn, frame):
                     break
             if key == ord('a'):
-                self.video.set_cap(idx - 1)
+                self.video.set_cap(idx - self.step)
         self.video.release()
         cv2.destroyAllWindows()
 
 
 if __name__ == '__main__':
-    h1, m1, s1 = 0, 24, 25    # 起始时间
+    h1, m1, s1 = 0, 0, 0    # 起始时间
     h2, m2, s2 = 0, 0, 0    # 结束时间
     app = SplitVideo(
-        video_path='/home/sfy/SFY/NAS/Datasets/football/raw_data/videos/斑马邦/X511023510010/20240427-161731/20240427-161731.mp4',
-        save_dir='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/bmb/2024-0511/raw/images',
+        video_path='/home/sfy/SFY/NAS/Datasets/football/raw_data/videos/斑马邦/A531024120003/20240422-183009/20240422-183009.mp4',
+        save_dir='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/sp/2024-0605/raw/images',
         start=h1*3600 + m1*60 + s1,
         end=h2*3600 + m2*60 + s2,
-        step=1,
+        step=3,
         max_n=500,
         datatype=''
     )
 
     # app.auto_split()
     app.manual_split(
-        model='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/model/20240510-yolov8s-p2/weights/best.pt',
+        model='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/model/20240521-yolov8s-p2/weights/best.pt',
+        show_label=True
     )
