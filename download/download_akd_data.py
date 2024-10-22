@@ -1,37 +1,49 @@
-import os
 import argparse
-import requests
 import urllib.parse
 from bs4 import BeautifulSoup
-from common import download_file
-import warnings
+from common import *
+import subprocess
 
 
-def run(url):
+def run(url, save_dir):
     print(urllib.parse.unquote(url))
     try:
+        find_file = False
+        sub_find_file = False
         response = requests.get(url)
         if response.status_code == 200:
             print('链接成功')
             soup = BeautifulSoup(response.text, 'html.parser')
+
+            decoded_url = urllib.parse.unquote(url)
+            folder = decoded_url.split('/')[-1] if decoded_url.split('/')[-1] else decoded_url.split('/')[-2]
+            folder = folder.replace(' ', '-')
+            folder = '-'.join(filter(None, folder.split('-')))
+            save_path = os.path.join(save_dir, folder)
+            os.makedirs(save_path, exist_ok=True)
+
             for a_tag in soup.find_all('a'):
                 fn = a_tag.get('href')
                 if fn.endswith('.h264') or fn.endswith('.aqms'):
+                    find_file = True
                     furl = url + fn if url.endswith('/') else url + '/' + fn
-                    decoded_url = urllib.parse.unquote(url)
-                    folder = decoded_url.split('/')[-1] if decoded_url.split('/')[-1] else decoded_url.split('/')[-2]
-                    folder = folder.replace(' ', '-')
-                    folder = '-'.join(filter(None, folder.split('-')))
-                    save_path = os.path.join(save_dir, folder)
-                    os.makedirs(save_path, exist_ok=True)
-                    save_path = os.path.join(save_path, fn)
-                    if os.path.exists(save_path):
-                        warnings.warn(f'该文件已存在: {urllib.parse.unquote(furl)}')
-                    else:
-                        download_file(furl, save_path, fn)
+                    save_file = os.path.join(save_path, fn)
+
+                    download_file(furl, save_file, fn)
+
                 elif '.' not in fn:
                     sub_url = url + fn if url.endswith('/') else url + '/' + fn
-                    run(sub_url)
+                    sub_find_file = sub_find_file | run(sub_url, save_path)
+
+            if sub_find_file:
+                process = subprocess.Popen(["./akd_convert.sh", save_path], stdout=subprocess.PIPE,
+                                           stderr=subprocess.PIPE, text=True)
+                for line in process.stdout:
+                    print(line, end="")
+                process.wait()
+
+            return True if find_file else False
+
     except requests.ConnectionError:
         print("网络问题, 连接失败")
     except requests.Timeout:
@@ -49,6 +61,6 @@ if __name__ == '__main__':
     inp_url = opt.input
     if inp_url.endswith('#/'):
         inp_url = inp_url[:-2]
-    save_dir = opt.output
-    os.makedirs(save_dir, exist_ok=True)
-    run(inp_url)
+
+    os.makedirs(opt.output, exist_ok=True)
+    run(inp_url, opt.output)

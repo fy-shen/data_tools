@@ -44,3 +44,14 @@ class LoadVideo:
     def release(self):
         if self.cap.isOpened():
             self.cap.release()
+
+
+class Video:
+    def __init__(self, video_path, start=0, end=0, step=1):
+        self.video = LoadVideo(video_path, max(step, 1))
+        self.start = start * self.video.fps
+        self.end = end * self.video.fps
+        self.video.set_cap(self.start)
+
+        self.save_range = True if self.start < self.end else False
+

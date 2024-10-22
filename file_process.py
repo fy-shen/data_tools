@@ -5,7 +5,7 @@ import random
 from tqdm import tqdm
 import warnings
 
-from utils.file import list_files, find_folders
+from utils.file import list_files, find_folders, img2txt, txt2img, find_files_with_ext
 
 
 def random_copy_file(src, dst, num, mode='copy'):
@@ -58,22 +58,50 @@ def rename_dirs(src, dst, root):
             print(f'Renamed {src_dir} --> {dst_dir}')
 
 
+def clean_data_file(img_dir):
+    # 移除冗余的图像和标签文件
+    txt_dir = img_dir.replace('images', 'labels')
+    ext_dir = os.path.abspath(os.path.join(img_dir, '../ex'))
+    os.makedirs(ext_dir, exist_ok=True)
+
+    imgs = find_files_with_ext(img_dir, 'jpg')
+    txts = find_files_with_ext(txt_dir, 'txt')
+    for img in tqdm(imgs):
+        txt = img2txt(img)
+        if not os.path.exists(txt):
+            shutil.move(img, os.path.join(ext_dir, os.path.basename(img)))
+
+    for txt in tqdm(txts):
+        img = txt2img(txt)
+        if not os.path.exists(img):
+            shutil.move(txt, os.path.join(ext_dir, os.path.basename(txt)))
+
+
 if __name__ == '__main__':
     # 1. 移动验证数据
-    random_copy_file(
-        src='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/sp/2024-0605/raw/images',
-        dst='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/sp/2024-0605/raw/val_images_raw',
-        num=0.3,
-        mode='move'
-    )
+    # random_copy_file(
+    #     src='/home/sfy/SFY/disk2/football/bmb/2024-0813/raw/images',
+    #     dst='/home/sfy/SFY/disk2/football/bmb/2024-0813/raw/train_images',
+    #     num=500,
+    #     mode='move'
+    # )
+    #
+    # # 2. 移动剩余数据到训练集文件夹
+    # random_copy_file(
+    #     src='/home/sfy/SFY/disk2/football/bmb/2024-0813/raw/images',
+    #     dst='//home/sfy/SFY/disk2/football/bmb/2024-0813/raw/val_images',
+    #     num=-1,
+    #     mode='move'
+    # )
 
-    # 2. 移动剩余数据到训练集文件夹
-    random_copy_file(
-        src='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/sp/2024-0605/raw/images',
-        dst='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/sp/2024-0605/raw/train_images_raw',
-        num=-1,
-        mode='move'
-    )
+    # 移动对应标签到验证集
+    # copy_files_base_ref(
+    #     src='/home/sfy/SFY/disk1/data/Football/AKD/BMB/2024-0605/labels/train',
+    #     dst='/home/sfy/SFY/disk1/data/Football/AKD/BMB/2024-0605/labels/val',
+    #     ref='/home/sfy/SFY/disk1/data/Football/AKD/BMB/2024-0605/images/val',
+    #     ext='.jpg',
+    #     mode='move'
+    # )
 
     # random_copy_file(
     #     src='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/wuxi/2024-0115/raw/images_all',
@@ -81,3 +109,5 @@ if __name__ == '__main__':
     #     num=50,
     #     mode='copy'
     # )
+
+    clean_data_file('/home/sfy/SFY/disk1/data/Football/AKD/BMB/2024-0511/raw/images_val')

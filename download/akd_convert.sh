@@ -41,7 +41,8 @@ for folder in "$data_dir"/*/; do
     if [ -e "$video_path" ]; then
         echo -e "${YELLOW}$video_path 已存在，跳过${NC}"
     else
-        echo "$video_raw 开始解码"
+        echo "$video_raw"
+        echo "开始解码"
         ./test_single_video "$video_raw" >/dev/null 2>&1
         if [ $? -ne 0 ]; then
             echo -e "${RED}$video_raw 解码失败${NC}"

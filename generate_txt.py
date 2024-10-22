@@ -42,9 +42,9 @@ class GenTXT:
 
 if __name__ == '__main__':
     app = GenTXT(
-        root_dir='/media/sfy/47f2d7a5-17b0-403c-94bc-4e594dc510ca/SFY/data/football_det_data',
-        data_dir='/media/sfy/47f2d7a5-17b0-403c-94bc-4e594dc510ca/SFY/data/football_det_data/SP/2024-0605/images/train',
-        txt_fn='data9-SP-2024-0605-train.txt'
+        root_dir='/home/sfy/SFY/disk1/data/Football',
+        data_dir='/home/sfy/SFY/disk1/data/Football/AKD/BMB/2024-0511/images/train',
+        txt_fn='BMB-2024-0511-train.txt'
     )
     app.normal()
     # app.soccernet(num=200)

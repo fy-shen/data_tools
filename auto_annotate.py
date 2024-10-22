@@ -2,10 +2,11 @@ import os
 from datetime import datetime
 import cv2
 import numpy as np
+import xml.etree.ElementTree as ET
 
 from ultralytics import YOLO
 from utils import IMG_FORMATS
-from utils.file import find_files_with_ext, img2txt
+from utils.file import find_files_with_ext, img2txt, splitfn
 
 
 class Annotator:
@@ -40,6 +41,9 @@ class Annotator:
                 res_cls_id = np.asarray(res_cls_id).reshape(-1, 1)
                 res_box = np.concatenate((res_cls_id, boxes.xywhn.numpy()), axis=1)
 
+                # 过滤小人
+                res_box = res_box[res_box[:, -2] * res_box[:, -1] * iw * ih > 260]
+
                 raw_label = np.loadtxt(txt_path, dtype=np.float32).reshape(-1, 5)
                 new_label = np.concatenate((raw_label, res_box), axis=0)
 
@@ -48,14 +52,61 @@ class Annotator:
                 os.makedirs(new_fp, exist_ok=True)
                 np.savetxt(os.path.join(new_fp, fn), new_label, fmt='%d %.6f %.6f %.6f %.6f', delimiter=' ')
 
+    def annotate_xml(self, xml_file, cls):
+        tree = ET.parse(xml_file)
+        root = tree.getroot()
+        for image in root.findall('image'):
+            attrib = image.attrib
+            img_fn = os.path.split(attrib['name'])[-1]
+            h, w = int(attrib['height']), int(attrib['width'])
+
+            img_path = None
+            for img in self.imgs:
+                if img_fn == os.path.basename(img):
+                    img_path = img
+                    self.imgs.remove(img)
+
+            if img_path is not None:
+                results = self.model(img_path, imgsz=max(h, w), classes=self.name2id(self.model.names, cls.values()))
+                for box in results[0].boxes:
+                    self.add_box_xml(image, box)
+
+        save_dir, xml_fn, _ = splitfn(os.path.abspath(xml_file))
+        tree.write(os.path.join(save_dir, f'{xml_fn}_auto.xml'))
+
+    def add_box_xml(self, image, box):
+        cls = int(box.cls)
+        x1, y1, x2, y2 = box.xyxy[0]
+        new_box = ET.SubElement(image, 'box')
+        new_box.set('label', self.model.names[cls])
+        new_box.set('source', 'auto_generated')
+        new_box.set('occluded', '0')
+        new_box.set('xtl', f'{x1:.2f}')
+        new_box.set('ytl', f'{y1:.2f}')
+        new_box.set('xbr', f'{x2:.2f}')
+        new_box.set('ybr', f'{y2:.2f}')
+        new_box.set('z_order', '0')
+
 
 if __name__ == '__main__':
     app = Annotator(
-        model='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/model/raw/yolov8l.pt',
-        imgdata='/media/sfy/47f2d7a5-17b0-403c-94bc-4e594dc510ca/SFY/data/football_det_data/SP/2024-0605/images/train',
+        model='models/detect/yolov8l.pt',
+        imgdata='/home/sfy/SFY/disk2/football/bmb/2024-0813/raw/val_images',
     )
     classes = {
         1: 'person'
     }
     app.txt_add_cls(cls=classes)
+
+    # app = Annotator(
+    #     model='/home/sfy/SFY/disk2/football/model/20240715-yolov8s-p2-p4/weights/best.pt',
+    #     imgdata='/home/sfy/SFY/disk2/football/bmb/2024-0813/raw/train_images',
+    # )
+    # classes = {
+    #     0: 'ball'
+    # }
+    # app.annotate_xml(
+    #     xml_file='/home/sfy/SFY/disk2/football/bmb/2024-0813/raw/annotation/train.xml',
+    #     cls=classes
+    # )
 

@@ -91,12 +91,13 @@ if __name__ == '__main__':
         'cover': 0,
         'similar': 0
     }
-    image_dir = '/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/sp/2024-0605/raw/train_images_raw'
-    label_dir = '/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/sp/2024-0605/raw/annotation/train'
-    for lf in find_files_with_ext(label_dir, 'xml'):
-        cvat_xml2yolo_txt(
-            image_dir=image_dir,
-            label_file=lf,
-            save_dir_name='val_labels_raw',
-            task='det'
-        )
+    image_dir = '/home/sfy/SFY/disk2/football/bmb/2024-0813/raw/val_images'
+    label_file = '/home/sfy/SFY/disk2/football/bmb/2024-0813/raw/annotation/val_manual.xml'
+    # label_dir = '/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/sp/2024-0605/raw/annotation/train'
+    # for lf in find_files_with_ext(label_dir, 'xml'):
+    cvat_xml2yolo_txt(
+        image_dir=image_dir,
+        label_file=label_file,
+        save_dir_name='val_labels',
+        task='det'
+    )

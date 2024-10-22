@@ -110,17 +110,17 @@ if __name__ == '__main__':
     h1, m1, s1 = 0, 0, 0    # 起始时间
     h2, m2, s2 = 0, 0, 0    # 结束时间
     app = SplitVideo(
-        video_path='/home/sfy/SFY/NAS/Datasets/football/raw_data/videos/斑马邦/A531024120003/20240422-183009/20240422-183009.mp4',
-        save_dir='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/sp/2024-0605/raw/images',
+        video_path='/home/sfy/SFY/disk2/videos/BV1uS4y177Hz.mp4',
+        save_dir='/home/sfy/SFY/disk2/videos/BV1uS4y177Hz',
         start=h1*3600 + m1*60 + s1,
         end=h2*3600 + m2*60 + s2,
-        step=3,
-        max_n=500,
+        step=15,
+        max_n=-1,
         datatype=''
     )
 
-    # app.auto_split()
-    app.manual_split(
-        model='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/model/20240521-yolov8s-p2/weights/best.pt',
-        show_label=True
-    )
+    app.auto_split()
+    # app.manual_split(
+    #     model='/media/sfy/91a012f8-ed6a-4c03-898c-359294a3c17f/sfy/football/model/20240521-yolov8s-p2/weights/best.pt',
+    #     show_label=True
+    # )
